@@ -156,7 +156,7 @@ class ReportCard extends React.Component<ReportCardProps> {
   private onCollapseClicked = () => {
     this.collapsed.value = !this.collapsed.value;
     if (this.content.value == this.initialContent) {
-      this.props.attachmentClient.download(this.props.report.attachment).then(report => {
+      this.props.attachmentClient.downloadAttachmentTextContent(this.props.report.attachment).then(report => {
         this.content.value = '<iframe class="full-size" srcdoc="' + this.escapeHTML(report) + '"></iframe>'
       }).catch(err => {
         this.content.value = err
@@ -256,7 +256,7 @@ abstract class AttachmentClient {
     return this.attachments
   }
 
-  abstract download(attach: Attachment | ReleaseTaskAttachment);
+  abstract downloadAttachmentTextContent(attach: Attachment | ReleaseTaskAttachment);
 
   public getDownloadableAttachment(attachmentName: string): Attachment | ReleaseTaskAttachment {
     const attachment = this.attachments.find((attachment) => { return attachment.name === attachmentName})
@@ -271,19 +271,18 @@ abstract class AttachmentClient {
   public async getReportSummary(attachmentName: string): Promise<ReportProps[]> {
     setText('Looking for Summary File')
     console.log("Get " + attachmentName + " attachment content")
-    const attachment = this.getDownloadableAttachment(attachmentName)
-    const content = await this.download(attachment);
-    console.log('got content ' + content);
-    const summaryContentJson = JSON.parse(content);
+    const summaryAttachment = this.getDownloadableAttachment(attachmentName)
+    const summaryAttachmentTextContent = await this.downloadAttachmentTextContent(summaryAttachment);
+    const summaryContentJson = JSON.parse(summaryAttachmentTextContent);
     setText('Processing Summary File')
-    const reports = await this.getReportAttachments()
+    const reportAttachments = await this.getReportAttachments()
     let data = summaryContentJson.map(report => {
-      let rp = reports.find(x => x.name === report.name)
+      let reportAttachment = reportAttachments.find(x => x.name === report.name)
       return {
         successful: report.successfull,
         name: report.name,
-        href: rp._links.self.href,
-        attachment: rp
+        href: reportAttachment._links.self.href,
+        attachment: reportAttachment
       }
     })
     return data
@@ -310,8 +309,8 @@ class BuildAttachmentClient extends AttachmentClient {
     return await buildClient.getAttachments(this.build.project.id, this.build.id, REPORT_ATTACHMENT_TYPE)
   }
 
-  public async download(attachment: Attachment | ReleaseTaskAttachment) : Promise<string> {
-    return ""; //TODO MM implement also for build...
+  public async downloadAttachmentTextContent(attachment: Attachment | ReleaseTaskAttachment) : Promise<string> {
+    return ""; //TODO MM implement properly also for build
   }
 }
 
@@ -326,9 +325,11 @@ class BuildAttachmentClient extends AttachmentClient {
       this.releaseEnvironment = releaseEnvironment
     }
 
-    public async download(attachment: Attachment | ReleaseTaskAttachment) : Promise<string> {
-      console.log('running my code')
-      const releaseTaskAttachment : ReleaseTaskAttachment = attachment as any;
+    public async downloadAttachmentTextContent(attachment: Attachment | ReleaseTaskAttachment) : Promise<string> {
+      const releaseTaskAttachment = attachment as ReleaseTaskAttachment;
+      if (!releaseTaskAttachment) {
+        return null;
+      }
       const releaseClient: ReleaseRestClient = getClient(ReleaseRestClient);
       let attachmentContent = await releaseClient.getTaskAttachmentContent(this.projectId, this.releaseEnvironment.releaseId,
         this.releaseEnvironment.id, this.deployStepAttempt, releaseTaskAttachment.timelineId, releaseTaskAttachment.recordId,
