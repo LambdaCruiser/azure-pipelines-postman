@@ -7,7 +7,7 @@ import * as SDK from "azure-devops-extension-sdk"
 import fetch from "node-fetch"
 
 import { getClient } from "azure-devops-extension-api"
-import { ReleaseEnvironment, ReleaseRestClient, ReleaseTaskAttachment } from "azure-devops-extension-api/Release"
+import { ReleaseEnvironment, ReleaseRestClient, ReleaseTask, ReleaseTaskAttachment } from "azure-devops-extension-api/Release"
 import { Build, BuildRestClient, Attachment } from "azure-devops-extension-api/Build"
 import { CommonServiceIds, IProjectPageService } from "azure-devops-extension-api"
 
@@ -94,7 +94,8 @@ SDK.register("registerRelease", {
 interface ReportProps {
   successful: boolean,
   name: string,
-  href: string
+  href: string,
+  attachment: Attachment  | ReleaseTaskAttachment
 }
 
 interface ReportCardProps {
@@ -159,7 +160,9 @@ class ReportCard extends React.Component<ReportCardProps> {
   private onCollapseClicked = () => {
     this.collapsed.value = !this.collapsed.value;
     if (this.content.value == this.initialContent) {
-      this.props.attachmentClient.download(this.props.report.href).then(report => {
+      //TODO MM commented out everything for now...
+
+      this.props.attachmentClient.download(this.props.report.attachment).then(report => {
         this.content.value = '<iframe class="full-size" srcdoc="' + this.escapeHTML(report) + '"></iframe>'
       }).catch(err => {
         this.content.value = err
@@ -270,13 +273,7 @@ abstract class AttachmentClient {
     return this.authHeaders
   }
 
-  public async download(href: string): Promise<string> {
-    const response = await fetch(href, (await this.getAuthHeaders()))
-    if (!response.ok) {
-      throw new Error(response.statusText)
-    }
-    return await response.text()
-  }
+  abstract async download(attach: Attachment | ReleaseTaskAttachment);
 
   public getDownloadableAttachment(attachmentName: string): Attachment | ReleaseTaskAttachment {
     const attachment = this.attachments.find((attachment) => { return attachment.name === attachmentName})
@@ -292,7 +289,9 @@ abstract class AttachmentClient {
     setText('Looking for Summary File')
     console.log("Get " + attachmentName + " attachment content")
     const attachment = this.getDownloadableAttachment(attachmentName)
-    const summaryContentJson = JSON.parse(await this.download(attachment._links.self.href))
+    const content = await this.download(attachment);
+    console.log('got content ' + content);
+    const summaryContentJson = JSON.parse(content);
     setText('Processing Summary File')
     const reports = await this.getReportAttachments()
     let data = summaryContentJson.map(report => {
@@ -300,7 +299,8 @@ abstract class AttachmentClient {
       return {
         successful: report.successfull,
         name: report.name,
-        href: rp._links.self.href
+        href: rp._links.self.href,
+        attachment: rp
       }
     })
     return data
@@ -326,17 +326,32 @@ class BuildAttachmentClient extends AttachmentClient {
     const buildClient: BuildRestClient = getClient(BuildRestClient)
     return await buildClient.getAttachments(this.build.project.id, this.build.id, REPORT_ATTACHMENT_TYPE)
   }
+
+  public async download(attachment: Attachment | ReleaseTaskAttachment) : Promise<string> {
+    return ""; //TODO MM implement also for build...
+  }
 }
 
   class ReleaseAttachmentClient extends AttachmentClient {
     private releaseEnvironment: ReleaseEnvironment
     private projectId
-    private deployStepAttempt
+    private deployStepAttempt : number;
     private runPlanId
 
     constructor(releaseEnvironment: ReleaseEnvironment) {
       super()
       this.releaseEnvironment = releaseEnvironment
+    }
+
+    public async download(attachment: Attachment | ReleaseTaskAttachment) : Promise<string> {
+      console.log('running my code')
+      const releaseTaskAttachment : ReleaseTaskAttachment = attachment as any;
+      const releaseClient: ReleaseRestClient = getClient(ReleaseRestClient);
+      let attachmentContent = await releaseClient.getTaskAttachmentContent(this.projectId, this.releaseEnvironment.releaseId,
+        this.releaseEnvironment.id, this.deployStepAttempt, releaseTaskAttachment.timelineId, releaseTaskAttachment.recordId,
+        releaseTaskAttachment.type, releaseTaskAttachment.name);
+      var enc = new TextDecoder("utf-8");
+      return enc.decode(attachmentContent);
     }
 
     public async init() {

@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "clean": "rimraf ./dist",
-    "build": "npm run clean && webpack --mode development"
+    "build": "npm run clean && webpack --mode development",
+    "build-prod": "npm run clean && webpack --mode production",
+    "package-extension": "tfx extension create --manifests azure-devops-extension.json"
   },
   "repository": {
     "type": "git",
