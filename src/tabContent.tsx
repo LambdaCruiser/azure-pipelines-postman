@@ -257,7 +257,7 @@ abstract class AttachmentClient {
   constructor() {}
 
   // Retrieve attachments and attachment contents from AzDO
-  abstract async init(): Promise<void>
+  abstract init(): Promise<void>
 
   public getAttachments() : (Attachment  | ReleaseTaskAttachment)[] {
     return this.attachments
@@ -273,7 +273,7 @@ abstract class AttachmentClient {
     return this.authHeaders
   }
 
-  abstract async download(attach: Attachment | ReleaseTaskAttachment);
+  abstract download(attach: Attachment | ReleaseTaskAttachment);
 
   public getDownloadableAttachment(attachmentName: string): Attachment | ReleaseTaskAttachment {
     const attachment = this.attachments.find((attachment) => { return attachment.name === attachmentName})
@@ -283,7 +283,7 @@ abstract class AttachmentClient {
     return attachment
   }
 
-  abstract async getReportAttachments(): Promise<Attachment[] | ReleaseTaskAttachment[]>
+  abstract getReportAttachments(): Promise<Attachment[] | ReleaseTaskAttachment[]>
 
   public async getReportSummary(attachmentName: string): Promise<ReportProps[]> {
     setText('Looking for Summary File')
