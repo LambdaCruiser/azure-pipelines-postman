@@ -20,10 +20,8 @@ import { IHeaderCommandBarItem } from "azure-devops-ui/HeaderCommandBar";
 const ATTACHMENT_TYPE = "postman.summary";
 const REPORT_ATTACHMENT_TYPE = "postman.report";
 const OUR_TASK_IDS = [
-  // PROD
-  "f5384bf0-1b5c-11ea-b0cc-5b064956a213",
-  // Finastra Dev
-  "0e9f302d-865d-52f6-aba0-a0e258493f6d"
+  // UploadPostmanHtmlReport
+  "f5384bf0-1b5c-11ea-b0cc-5b064956a213"
 ]
 
 SDK.init()
@@ -54,8 +52,6 @@ function setText (message: string) {
   if (messageContainer) {
     messageContainer.innerHTML = message
   }
-  const spinner = document.querySelector(".spinner")
-
 }
 
 function setError (error: Error) {
@@ -160,8 +156,6 @@ class ReportCard extends React.Component<ReportCardProps> {
   private onCollapseClicked = () => {
     this.collapsed.value = !this.collapsed.value;
     if (this.content.value == this.initialContent) {
-      //TODO MM commented out everything for now...
-
       this.props.attachmentClient.download(this.props.report.attachment).then(report => {
         this.content.value = '<iframe class="full-size" srcdoc="' + this.escapeHTML(report) + '"></iframe>'
       }).catch(err => {
@@ -170,7 +164,6 @@ class ReportCard extends React.Component<ReportCardProps> {
     }
   }
 }
-
 
 interface TaskAttachmentPanelProps {
   attachmentClient: AttachmentClient
@@ -261,16 +254,6 @@ abstract class AttachmentClient {
 
   public getAttachments() : (Attachment  | ReleaseTaskAttachment)[] {
     return this.attachments
-  }
-
-  private async getAuthHeaders(): Promise<Object> {
-    if (this.authHeaders === undefined) {
-      console.log('Get access token')
-      const accessToken = await SDK.getAccessToken()
-      const b64encodedAuth = Buffer.from(':' + accessToken).toString('base64')
-      this.authHeaders = { headers: {'Authorization': 'Basic ' + b64encodedAuth} }
-    }
-    return this.authHeaders
   }
 
   abstract download(attach: Attachment | ReleaseTaskAttachment);
