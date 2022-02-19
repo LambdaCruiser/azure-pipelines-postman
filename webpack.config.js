@@ -26,7 +26,7 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                use: ["style-loader", "css-loader", "azure-devops-ui/buildScripts/css-variables-loader", "sass-loader"]
+                use: ["style-loader", "azure-devops-ui/buildScripts/css-variables-loader", "css-loader", "sass-loader"]
             },
             {
                 test: /\.css$/,
