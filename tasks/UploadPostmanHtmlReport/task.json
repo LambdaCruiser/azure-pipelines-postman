@@ -3,9 +3,9 @@
   "name": "UploadPostmanHtmlReport",
   "friendlyName": "Upload Postman HTML Report",
   "description": "Upload Postman HTML Report",
-  "author": "Maciej Maciejewski",
-  "helpUrl": "https://github.com/maciejmaciejewski/azure-pipelines-postman#usage-examples",
-  "helpMarkDown": "[More Information](https://github.com/maciejmaciejewski/azure-pipelines-postman#usage-examples)",
+  "author": "Marcin Marczak",
+  "helpUrl": "https://github.com/lambdacruiser/azure-pipelines-postman#usage-examples",
+  "helpMarkDown": "[More Information](https://github.com/lambdacruiser/azure-pipelines-postman#usage-examples)",
   "category": "Utility",
   "visibility": [
     "Build",
@@ -15,7 +15,7 @@
   "version": {
     "Major": "1",
     "Minor": "1",
-    "Patch": "3"
+    "Patch": "4"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Upload Postman Html Report",

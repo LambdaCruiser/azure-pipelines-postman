@@ -6,7 +6,7 @@ This Azure DevOps extension provides task for Publishing Postman / Newman HTML R
 
 Reports can be viewed as a tab in Build and Release result page. Each Tab contains embeded reports as well as direct download links.
 
-For more info please refer to documentation page on [GitHub](https://github.com/maciejmaciejewski/azure-pipelines-postman)
+For more info please refer to documentation page on [GitHub](https://github.com/lambdacruiser/azure-pipelines-postman)
 
 ## Configuration
 

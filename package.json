@@ -1,6 +1,6 @@
 {
   "name": "azure-pipelines-postman",
-  "version": "1.1.3",
+  "version": "1.1.16",
   "description": "Embed Postman HTML result into build and release tab",
   "main": "index.js",
   "scripts": {
@@ -12,18 +12,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/maciejmaciejewski/azure-pipelines-postman.git"
+    "url": "git+https://github.com/lambdacruiser/azure-pipelines-postman.git"
   },
   "keywords": [
     "Azure",
     "DevOps"
   ],
-  "author": "Maciej Maciejewski <maciej.maciejewski@finastra.com>",
-  "license": "ISC",
+  "author": "Marcin Marczak <marcin.marczak@pl.abb.com>",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/maciejmaciejewski/azure-pipelines-postman/issues"
+    "url": "https://github.com/lambdacruiser/azure-pipelines-postman/issues"
   },
-  "homepage": "https://github.com/maciejmaciejewski/azure-pipelines-postman#readme",
+  "homepage": "https://github.com/lambdacruiser/azure-pipelines-postman#readme",
   "devDependencies": {
     "@types/node": "^13.7.4",
     "@types/node-fetch": "^2.5.5",

@@ -32,7 +32,7 @@ steps:
   displayName: 'TFX: Package Extension'
   inputs:
     rootFolder: .
-    publisherId: MaciejMaciejewski
+    publisherId: AbbMarcinMarczak
     extensionName: 'Postman Report'
     extensionVisibility: public
     extensionPricing: free
@@ -43,7 +43,7 @@ steps:
   displayName: 'TFX: Package Extension Dev'
   inputs:
     rootFolder: .
-    publisherId: MaciejMaciejewski
+    publisherId: AbbMarcinMarczak
     extensionId: 'azure-pipelines-postman'
     extensionTag: dev
     extensionName: 'Postman Report Dev'
@@ -59,7 +59,7 @@ steps:
   inputs:
     connectedServiceName: Marketplace
     rootFolder: .
-    publisherId: MaciejMaciejewski
+    publisherId: AbbMarcinMarczak
     extensionId: 'azure-pipelines-postman'
     extensionTag: dev
     extensionName: 'Postman Report Dev'
@@ -75,7 +75,7 @@ steps:
     connectedServiceName: Marketplace
     method: vsix
     vsixFile: '**.vsix'
-    accounts: 'maciejmaciejewski-dev'
+    accounts: 'marcinmarczak'
   condition: and(succeeded(), ne(variables['Build.SourceBranchName'], 'master'))
 
 - task: CopyFiles@2

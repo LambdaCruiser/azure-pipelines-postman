@@ -1,16 +1,16 @@
 {
   "manifestVersion": 1,
   "id": "postman-html-report-tab",
-  "name": "Postman Html Report Tab",
-  "publisher": "SimplyCactus",
+  "name": "Postman Report",
+  "publisher": "AbbMarcinMarczak",
   "public": false,
   "author": "Marcin Marczak",
-  "version": "1.1.15",
+  "version": "1.1.16",
   "description": "Embed Postman HTML reports in Azure Pipelines",
   "galleryFlags": [],
   "repository": {
     "type": "git",
-    "uri": "https://github.com/maciejmaciejewski/azure-pipelines-postman"
+    "uri": "https://github.com/lambdacruiser/azure-pipelines-postman"
   },
   "targets": [{ "id": "Microsoft.VisualStudio.Services" }],
   "scopes": [
