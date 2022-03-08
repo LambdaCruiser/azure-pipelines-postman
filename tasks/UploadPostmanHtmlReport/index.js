@@ -46,7 +46,7 @@ function run () {
 
 function generateName (fileName) {
   const jobName = dashify(tl.getVariable('Agent.JobName'))
-  const stageName = dashify(tl.getVariable('System.StageDisplayName'))
+  const stageName = dashify(tl.getVariable('System.StageDisplayName') || tl.getVariable('Release.EnvironmentName'))
   const stageAttempt = tl.getVariable('System.StageAttempt')
   const tabName = tl.getInput('tabName', false ) || 'Postman'
 
