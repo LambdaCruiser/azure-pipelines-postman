@@ -6,11 +6,10 @@ const { load } = require('cheerio')
 const forbiddenKeys = ['password', 'passwd', 'client_secret', 'access_token', 'refresh_token']
 const template = /Failed Tests ([0-9]*)/
 const dashify = require('dashify')
-const hat = require('hat')
 
 function run () {
   let cwd = resolve(tl.getPathInput('cwd', true))
-
+  tl.debug(`Working directory: ${cwd}`)
   let files = globby.sync([cwd.replace(/\\/g, '/')], {expandDirectories : {files: ['*'], extensions: ['html']}})
 
   const fileProperties = []
